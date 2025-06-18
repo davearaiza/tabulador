@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabulador de Servicios Médicos - Chihuahua 2025</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f9fc;
+        }
+        
+        header {
+            background-color: #005f87;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        h2 {
+            color: #005f87;
+            border-bottom: 2px solid #005f87;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            flex-grow: 1;
+            min-width: 200px;
+        }
+        
+        button {
+            background-color: #005f87;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #003d5a;
+        }
+        
+        .service-info {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .service-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #005f87;
+            margin-bottom: 10px;
+        }
+        
+        .service-code {
+            background-color: #e1f0f7;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .price-table th, .price-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .price-table th {
+            background-color: #005f87;
+            color: white;
+        }
+        
+        .price-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .price-table tr:hover {
+            background-color: #e1f0f7;
+        }
+        
+        .level-selector {
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .level-selector label {
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background-color: #fffde7;
+            font-weight: bold;
+        }
+        
+        .category-filter {
+            margin-bottom: 20px;
+        }
+        
+        .services-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .service-card {
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .service-card.selected {
+            background-color: #e1f0f7;
+            border: 2px solid #005f87;
+        }
+        
+        .service-card h3 {
+            margin-top: 0;
+            color: #005f87;
+        }
+        
+        .service-card .price {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .total-container {
+            background-color: #005f87;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .total-container h3 {
+            margin: 0 0 10px 0;
+        }
+        
+        .total-amount {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .checkbox-container input {
+            margin-right: 10px;
+            min-width: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .level-selector {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .services-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SERVICIOS DE SALUD DE CHIHUAHUA</h1>
+        <p>Tabulador de Servicios Médico-Asistenciales actualizado 2025</p>
+<p>Elaborado por LDG. Dave Araiza</p>
+    </header>
+    
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Buscar por clave o descripción...">
+        <select id="categoryFilter" onchange="filterByCategory()">
+            <option value="">Todas las categorías</option>
+            <!-- Las opciones se llenarán dinámicamente -->
+        </select>
+        <button onclick="searchService()">Buscar</button>
+    </div>
+    
+    <div class="level-selector">
+        <label for="levelSelect">Nivel:</label>
+        <select id="levelSelect" onchange="updateSelectedServices()">
+            <option value="6">Nivel 6 (Base)</option>
+            <option value="7">Nivel 6 + 50%</option>
+            <option value="1">Nivel 1 (15%)</option>
+            <option value="2">Nivel 2 (25%)</option>
+            <option value="3">Nivel 3 (35%)</option>
+            <option value="4">Nivel 4 (50%)</option>
+            <option value="5">Nivel 5 (75%)</option>
+        </select>
+    </div>
+    
+    <div id="servicesByCategory" class="services-list">
+        <!-- Se llenará dinámicamente al seleccionar categoría -->
+    </div>
+    
+    <div class="total-container">
+        <h3>Total de servicios seleccionados:</h3>
+        <div class="total-amount" id="totalAmount">$0.00</div>
+    </div>
+    
+    <div id="serviceResults" class="service-info" style="display: none;">
+        <div class="service-title" id="serviceName"></div>
+        <div class="service-code" id="serviceCode"></div>
+        <div id="serviceDescription"></div>
+        
+        <div class="level-selector">
+            <label for="levelSelectDetail">Nivel:</label>
+            <select id="levelSelectDetail" onchange="updatePrices()">
+                <option value="6">Nivel 6 (Base)</option>
+                <option value="7">Nivel 6 + 50%</option>
+                <option value="1">Nivel 1 (15%)</option>
+                <option value="2">Nivel 2 (25%)</option>
+                <option value="3">Nivel 3 (35%)</option>
+                <option value="4">Nivel 4 (50%)</option>
+                <option value="5">Nivel 5 (75%)</option>
+            </select>
+            <div id="selectedPrice" style="font-weight: bold; font-size: 18px;"></div>
+        </div>
+        
+        <table class="price-table">
+            <thead>
+                <tr>
+                    <th>Nivel</th>
+                    <th>Porcentaje</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody id="priceTableBody">
+                <!-- Se llenará dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+    
+    <div id="noResults" style="display: none; text-align: center; padding: 20px;">
+        No se encontraron servicios que coincidan con la búsqueda.
+    </div>
+
+    <script>
+        // Datos de los servicios médicos (ampliados)
+        const medicalServices = [
+            // Consulta Externa
+            { clave: "010-01", descripcion: "Consulta general", umas: 3.34, nivel6: 3.34 * 113.14, categoria: "Consultas" },
+            { clave: "010-02", descripcion: "Consulta especialidad", umas: 4.34, nivel6: 4.34 * 113.14, categoria: "Consultas" },
+            { clave: "010-03", descripcion: "Consulta subsecuente de especialidad", umas: 3.92, nivel6: 3.92 * 113.14, categoria: "Consultas" },
+            { clave: "010-05", descripcion: "Consulta urgencias", umas: 6.48, nivel6: 6.48 * 113.14, categoria: "Consultas" },
+            { clave: "010-06", descripcion: "Observación de 2 a 12 hrs.", umas: 16.98, nivel6: 16.98 * 113.14, categoria: "Hospitalización" },
+            { clave: "010-07", descripcion: "Observación de 12 a 23 hrs.", umas: 21.1, nivel6: 21.1 * 113.14, categoria: "Hospitalización" },
+	    { clave: "010-09", descripcion: "Hidratación de menores", umas: 2.55, nivel6: 2.55 * 113.14, categoria: "Hospitalización" },
+            { clave: "010-10", descripcion: "Hospitalización día cama", umas: 40.97, nivel6: 40.97 * 113.14, categoria: "Hospitalización" },
+	    { clave: "010-11", descripcion: "Día Incubadora", umas: 5.89, nivel6: 5.89 * 113.14, categoria: "Hospitalización" },
+            
+            // Cirugía General
+           { "clave": "020-01", "descripcion": "Lipomas", umas: 19.62, nivel6: 19.62 * 113.14, categoria: "Cirugía General" },
+  	   { "clave": "020-02", "descripcion": "Quiste cereceo quirúrgico", "umas": 19.62, "nivel6": 19.62 * 113.14, "categoria": "Cirugía General" },
+ 	   { "clave": "020-04", "descripcion": "Extirpación ganglionar", "umas": 48.76, "nivel6": 48.76 * 113.14, "categoria": "Cirugía General" },
+	   { "clave": "020-05", "descripcion": "Mastectomía", "umas": 45.24, "nivel6": 45.24 * 113.14, "categoria": "Cirugía General" },
+	   { clave: "020-06", descripcion: "Hernia umbilical y paraumbilical", umas: 321.34, nivel6: 321.34 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-07", descripcion: "Hernia inguinal", umas: 321.34, nivel6: 321.34 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-08", descripcion: "Hernia crural", umas: 321.34, nivel6: 321.34 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-09", descripcion: "Hernia hiatal", umas: 321.34, nivel6: 321.34 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-10", descripcion: "Quiste pilonidal", umas: 19.62, nivel6: 19.62 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-11", descripcion: "Apendicectomia", umas: 575.72, nivel6: 575.72 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-12", descripcion: "Extracción de uñas", umas: 4.71, nivel6: 4.71 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-13", descripcion: "Litotomía", umas: 27.82, nivel6: 27.82 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-14", descripcion: "Safenectomía por extremidad", umas: 26.76, nivel6: 26.76 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-15", descripcion: "Eventración postquirúrgica", umas: 37.77, nivel6: 37.77 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-16", descripcion: "Histerectomía, anterectomia y biopsia", umas: 48.66, nivel6: 48.66 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-17", descripcion: "Extirpación de tumores de piel malignos", umas: 19.42, nivel6: 19.42 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-18", descripcion: "Extirpación de tumores de piel benignos", umas: 14.91, nivel6: 14.91 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-19", descripcion: "Fisuras", umas: 14.75, nivel6: 14.75 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-20", descripcion: "Tiroidectomía", umas: 42.28, nivel6: 42.28 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-21", descripcion: "Frenorrafia", umas: 64.69, nivel6: 64.69 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-22", descripcion: "Coledocorrafia", umas: 26.11, nivel6: 26.11 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-23", descripcion: "Diastasis de rectos", umas: 28.55, nivel6: 28.55 * 113.14, categoria: "Cirugía General" },
+  { clave: "020-24", descripcion: "Sello de agua", umas: 17.76, nivel6: 17.76 * 113.14, categoria: "Cirugía General" },
+            
+            // Odontología
+            { clave: "030-01", descripcion: "Consulta y plan de tratamiento", umas: 3.34, nivel6: 3.34 * 113.14, categoria: "Odontología" },
+  { clave: "030-06", descripcion: "Apicoformación", umas: 2.33, nivel6: 2.33 * 113.14, categoria: "Odontología" },
+  { clave: "030-07", descripcion: "Corona de acero cromo", umas: 6.87, nivel6: 6.87 * 113.14, categoria: "Odontología" },
+  { clave: "030-08", descripcion: "Mantenedores de espacio", umas: 16.38, nivel6: 16.38 * 113.14, categoria: "Odontología" },
+  { clave: "030-09", descripcion: "Sedación", umas: 14.05, nivel6: 14.05 * 113.14, categoria: "Odontología" },
+
+// Operatoria
+            { clave: "031-00", descripcion: "Operatoria", umas: 0.00, nivel6: 0.00 * 113.14, categoria: "Operatoria" },
+  { clave: "031-01", descripcion: "Atención por cuadrante", umas: 23.64, nivel6: 23.64 * 113.14, categoria: "Operatoria" },
+  { clave: "031-02", descripcion: "Obturación con amalgama de plata", umas: 6.87, nivel6: 6.87 * 113.14, categoria: "Operatoria" },
+  { clave: "031-03", descripcion: "Obturación con resina compuesta", umas: 8.56, nivel6: 8.56 * 113.14, categoria: "Operatoria" },
+  { clave: "031-04", descripcion: "Obturación con IRM o con óxido de zinc", umas: 5.78, nivel6: 5.78 * 113.14, categoria: "Operatoria" },
+  { clave: "031-05", descripcion: "Restauración con corona de acero de cromo", umas: 4.82, nivel6: 4.82 * 113.14, categoria: "Operatoria" },
+  { clave: "031-06", descripcion: "Restauración con corona de celuloide", umas: 6.27, nivel6: 6.27 * 113.14, categoria: "Operatoria" },
+  { clave: "031-07", descripcion: "Cemento incrustaciones y corona", umas: 6.27, nivel6: 6.27 * 113.14, categoria: "Operatoria" },
+  { clave: "031-08", descripcion: "Aplicación de flúor", umas: 0.00, nivel6: 0.00 * 113.14, categoria: "Operatoria" },
+  { clave: "031-09", descripcion: "Exodoncia simple (por pieza) vía alveolar", umas: 9.70, nivel6: 9.70 * 113.14, categoria: "Operatoria" },
+  { clave: "031-10", descripcion: "Exodoncia múltiple con regularización", umas: 16.85, nivel6: 16.85 * 113.14, categoria: "Operatoria" },
+  { clave: "031-11", descripcion: "Exodoncia por disección", umas: 32.96, nivel6: 32.96 * 113.14, categoria: "Operatoria" },
+  { clave: "031-12", descripcion: "Cirugía preprotésica", umas: 132.71, nivel6: 132.71 * 113.14, categoria: "Operatoria" },
+  { clave: "031-13", descripcion: "Cirugía periapical", umas: 132.71, nivel6: 132.71 * 113.14, categoria: "Operatoria" },
+  { clave: "031-14", descripcion: "Cirugía parodontal", umas: 265.34, nivel6: 265.34 * 113.14, categoria: "Operatoria" },
+  { clave: "031-15", descripcion: "Cirugía ATM prótesis", umas: 26.76, nivel6: 26.76 * 113.14, categoria: "Operatoria" },
+  { clave: "031-16", descripcion: "Reducción cerrada de fractura mandibular", umas: 16.85, nivel6: 16.85 * 113.14, categoria: "Operatoria" },
+  { clave: "031-17", descripcion: "Reducción abierta de fractura mandibular", umas: 32.96, nivel6: 32.96 * 113.14, categoria: "Operatoria" },
+  { clave: "031-18", descripcion: "Mandíbula", umas: 132.71, nivel6: 132.71 * 113.14, categoria: "Operatoria" },
+  { clave: "031-19", descripcion: "Maxilar", umas: 132.71, nivel6: 132.71 * 113.14, categoria: "Operatoria" },
+  { clave: "031-20", descripcion: "Bimaxilar", umas: 265.34, nivel6: 265.34 * 113.14, categoria: "Operatoria" },
+  { clave: "031-21", descripcion: "Pulido de restauración", umas: 1.96, nivel6: 1.96 * 113.14, categoria: "Operatoria" },
+  { clave: "031-22", descripcion: "Cirugía de labio fisurado", umas: 17.85, nivel6: 17.85 * 113.14, categoria: "Operatoria" },
+  { clave: "031-23", descripcion: "Cirugía de paladar fisurado", umas: 17.85, nivel6: 17.85 * 113.14, categoria: "Operatoria" },
+  { clave: "031-24", descripcion: "Drenaje de abceso en quirófano", umas: 14.09, nivel6: 14.09 * 113.14, categoria: "Operatoria" },
+  { clave: "031-25", descripcion: "Drenaje de absceso en consulta externa", umas: 6.69, nivel6: 6.69 * 113.14, categoria: "Operatoria" },
+  { clave: "031-26", descripcion: "Excisión de neoplastia bucal c/anest. local", umas: 27.57, nivel6: 27.57 * 113.14, categoria: "Operatoria" },
+  { clave: "031-27", descripcion: "Excisión de neoplastia bucal c/anest. gral.", umas: 32.77, nivel6: 32.77 * 113.14, categoria: "Operatoria" },
+  { clave: "031-28", descripcion: "Excisión de neopl. bucal r. x. periap. y oclusal", umas: 1.67, nivel6: 1.67 * 113.14, categoria: "Operatoria" },
+  { clave: "031-29", descripcion: "Curaciones dentales", umas: 1.96, nivel6: 1.96 * 113.14, categoria: "Operatoria" },
+  { clave: "031-30", descripcion: "Limpieza cabitron", umas: 3.34, nivel6: 3.34 * 113.14, categoria: "Operatoria" },
+  { clave: "031-31", descripcion: "Suturas dentales", umas: 6.67, nivel6: 6.67 * 113.14, categoria: "Operatoria" },
+  { clave: "031-32", descripcion: "Odontoxesis", umas: 4.02, nivel6: 4.02 * 113.14, categoria: "Operatoria" },
+  { clave: "031-33", descripcion: "Silicato", umas: 1.69, nivel6: 1.69 * 113.14, categoria: "Operatoria" },
+  { clave: "031-34", descripcion: "Dientes supernumerarios", umas: 14.20, nivel6: 14.20 * 113.14, categoria: "Operatoria" },
+  { clave: "031-35", descripcion: "Múltiples bajo anestesia", umas: 14.20, nivel6: 14.20 * 113.14, categoria: "Operatoria" },
+  { clave: "031-36", descripcion: "Extracción tercer molar", umas: 11.77, nivel6: 11.77 * 113.14, categoria: "Operatoria" },
+  { clave: "031-37", descripcion: "Obturación con ionómero de vidrio", umas: 7.02, nivel6: 7.02 * 113.14, categoria: "Operatoria" },
+  
+            
+// Terapia Pulpar
+            { clave: "032-01", descripcion: "Recubrimientos pulpares", umas: 1.06, nivel6: 1.06 * 113.14, categoria: "Terapia Pulpar" },
+  { clave: "032-02", descripcion: "Pulpotomía piezas posteriores", umas: 1.47, nivel6: 1.47 * 113.14, categoria: "Terapia Pulpar" },
+  { clave: "032-03", descripcion: "Pulpotomía piezas anteriores", umas: 1.69, nivel6: 1.69 * 113.14, categoria: "Terapia Pulpar" },
+  { clave: "032-04", descripcion: "Urgencia pulpar", umas: 7.02, nivel6: 7.02 * 113.14, categoria: "Terapia Pulpar" },
+            
+// Radiologia
+            { clave: "033-01", descripcion: "Técnica oclusal", umas: 1.82, nivel6: 1.82 * 113.14, categoria: "Radiología" },
+  { clave: "033-02", descripcion: "Técnica periapical", umas: 1.26, nivel6: 1.26 * 113.14, categoria: "Radiología" },
+           
+	// Patologia Dental
+            { clave: "034-01", descripcion: "Profilaxis", umas: 2.96, nivel6: 2.96 * 113.14, categoria: "Patología Dental" },
+
+// Cirugia Dental
+{ clave: "035-01", descripcion: "Frenivectomia", umas: 22.86, nivel6: 22.86 * 113.14, categoria: "Cirugía Dental" },
+  { clave: "035-02", descripcion: "Ostiomielitis", umas: 2.94, nivel6: 2.94 * 113.14, categoria: "Cirugía Dental" },
+  { clave: "035-03", descripcion: "Parodoncia", umas: 6.87, nivel6: 6.87 * 113.14, categoria: "Cirugía Dental" },
+  { clave: "035-04", descripcion: "Gingivectomia", umas: 3.53, nivel6: 3.53 * 113.14, categoria: "Cirugía Dental" },
+  { clave: "035-05", descripcion: "Plastia labial", umas: 15.97, nivel6: 15.97 * 113.14, categoria: "Cirugía Dental" },
+  { clave: "035-06", descripcion: "Endodoncia", umas: 8.20, nivel6: 8.20 * 113.14, categoria: "Cirugía Dental" },
+  { clave: "035-07", descripcion: "Distractor dactilar y mandibular", umas: 74.09, nivel6: 74.09 * 113.14, categoria: "Cirugía Dental" },
+
+		 // Gineco-obstetricia
+           { clave: "080-01", descripcion: "Histerectomía abdominal", umas: 238.72, nivel6: 238.72 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-02", descripcion: "Histerectomía vaginal", umas: 238.72, nivel6: 238.72 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-03", descripcion: "Bartholinectomía o Marsupielización", umas: 18.82, nivel6: 18.82 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-04", descripcion: "Conificación", umas: 256.64, nivel6: 256.64 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-05", descripcion: "Resección alta o baja de cérvix", umas: 20.74, nivel6: 20.74 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-06", descripcion: "Debridación de absceso mamario", umas: 251.68, nivel6: 251.68 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-07", descripcion: "Colpoperineorrafia", umas: 41.54, nivel6: 41.54 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-08", descripcion: "Resección de quistes y tumores benignos", umas: 44.50, nivel6: 44.50 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-09", descripcion: "Drenaje de fondo de saco (culdocentesis)", umas: 15.81, nivel6: 15.81 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-10", descripcion: "Reparación de fístulas vésico vaginales", umas: 17.38, nivel6: 17.38 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-11", descripcion: "Exéresis de nódulo mamario", umas: 16.11, nivel6: 16.11 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-12", descripcion: "Extirpación de pólipo cervical", umas: 21.70, nivel6: 21.70 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-13", descripcion: "Laparoscopia", umas: 329.28, nivel6: 329.28 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-14", descripcion: "Salpingoclasia", umas: 0.00, nivel6: 0.00 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-15", descripcion: "Salpingoferectomía bilateral o unilateral", umas: 153.33, nivel6: 153.33 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-16", descripcion: "Parto distócico", umas: 220.46, nivel6: 220.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-17", descripcion: "Embarazo extrauterino (ectópico)", umas: 173.09, nivel6: 173.09 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-18", descripcion: "Parto normal", umas: 115.55, nivel6: 115.55 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-19", descripcion: "Cesárea", umas: 225.10, nivel6: 225.10 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-20", descripcion: "Legrado", umas: 145.63, nivel6: 145.63 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-21", descripcion: "Extirpación de quiste de ovario", umas: 34.00, nivel6: 34.00 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-23", descripcion: "Cerclaje de cérvix", umas: 256.64, nivel6: 256.64 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-24", descripcion: "Conización de cérvix", umas: 256.64, nivel6: 256.64 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-25", descripcion: "Cirugía abdominal no clasificada", umas: 305.78, nivel6: 305.78 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-26", descripcion: "Miomectomía", umas: 152.86, nivel6: 152.86 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-27", descripcion: "Tumoraciones anexiales", umas: 152.86, nivel6: 152.86 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-28", descripcion: "Plastia tubaria", umas: 325.34, nivel6: 325.34 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-29", descripcion: "Biopsia de glándula mamaria", umas: 76.46, nivel6: 76.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-30", descripcion: "Metroplastía", umas: 240.52, nivel6: 240.52 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-31", descripcion: "Cirugía menor dentro de quirófano", umas: 38.26, nivel6: 38.26 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-32", descripcion: "Laparotomía exploradora", umas: 152.86, nivel6: 152.86 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-34", descripcion: "Addaire", umas: 76.46, nivel6: 76.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-35", descripcion: "Cesárea-histerectomía", umas: 305.78, nivel6: 305.78 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-36", descripcion: "Colpoclisis", umas: 76.46, nivel6: 76.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-37", descripcion: "Cuadrantectomía", umas: 152.86, nivel6: 152.86 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-38", descripcion: "Extirpación de lipoma", umas: 38.26, nivel6: 38.26 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-39", descripcion: "Extirpación quiste Gardner", umas: 38.26, nivel6: 38.26 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-40", descripcion: "Extirpación pólipo cervical", umas: 38.26, nivel6: 38.26 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-41", descripcion: "Hernioplastía", umas: 76.46, nivel6: 76.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-42", descripcion: "Histeroscopía", umas: 76.46, nivel6: 76.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-43", descripcion: "Histerotomía", umas: 238.72, nivel6: 238.72 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-44", descripcion: "Histeroctomía radical o amplificada", umas: 382.18, nivel6: 382.18 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-45", descripcion: "Mastectomía radical", umas: 305.78, nivel6: 305.78 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-46", descripcion: "Plastia de pared", umas: 76.46, nivel6: 76.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-47", descripcion: "Reparación de fístula recto-vaginal", umas: 76.46, nivel6: 76.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-48", descripcion: "Salpingo-ovariolisis y adherenciolisis", umas: 152.86, nivel6: 152.86 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-49", descripcion: "Salpingectomía", umas: 76.46, nivel6: 76.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-50", descripcion: "Suspensión de cúpula vaginal", umas: 76.46, nivel6: 76.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-51", descripcion: "Uretropexia", umas: 76.46, nivel6: 76.46 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-52", descripcion: "Servicio de transfusión fetal", umas: 15.28, nivel6: 15.28 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-53", descripcion: "Servicio de monitorización fetal anteparto", umas: 9.16, nivel6: 9.16 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-54", descripcion: "Amniocentesis", umas: 15.30, nivel6: 15.30 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-56", descripcion: "Fotodensitometría radiológica", umas: 51.03, nivel6: 51.03 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-57", descripcion: "Cariotipo en sangre periférica", umas: 32.04, nivel6: 32.04 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-58", descripcion: "Cromatina sexual", umas: 9.61, nivel6: 9.61 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-59", descripcion: "Cultivo líquido amniótico y tejidos", umas: 51.03, nivel6: 51.03 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-60", descripcion: "Cryocirugía cérvix uterino", umas: 31.90, nivel6: 31.90 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-61", descripcion: "Asa diatérmica", umas: 44.66, nivel6: 44.66 * 113.14, categoria: "Gineco-Obstetricia" },
+  { clave: "080-62", descripcion: "Mastografía", umas: 11.48, nivel6: 11.48 * 113.14, categoria: "Gineco-Obstetricia" }, 
+
+		// Plastias gingivales hiperplastias
+            { clave: "036-01", descripcion: "Pordifenhidantoina cuadrante", umas: 2.18, nivel6: 2.18 * 113.14, categoria: "Plastias Gingivales Hiperplastias" },
+  { clave: "036-02", descripcion: "Debridación y canalización de abscesos", umas: 1.39, nivel6: 1.39 * 113.14, categoria: "Plastias Gingivales Hiperplastias" },
+  { clave: "036-03", descripcion: "Corrección de fistula oro-angral", umas: 2.18, nivel6: 2.18 * 113.14, categoria: "Plastias Gingivales Hiperplastias" },
+  { clave: "036-04", descripcion: "Apicectomia", umas: 3.53, nivel6: 3.53 * 113.14, categoria: "Plastias Gingivales Hiperplastias" },
+  { clave: "036-05", descripcion: "Bloqueos líticos a nivel trigeminal", umas: 1.96, nivel6: 1.96 * 113.14, categoria: "Plastias Gingivales Hiperplastias" },
+  { clave: "036-06", descripcion: "Regularización de proc. alveolares residuales", umas: 1.43, nivel6: 1.43 * 113.14, categoria: "Plastias Gingivales Hiperplastias" },
+  { clave: "036-07", descripcion: "Tulvidina y toma de biopsia", umas: 1.43, nivel6: 1.43 * 113.14, categoria: "Plastias Gingivales Hiperplastias" }, 
+
+	// Traumatología
+            { clave: "037-01", descripcion: "Suturas menores", umas: 2.88, nivel6: 2.88 * 113.14, categoria: "Traumatología" },
+  { clave: "037-02", descripcion: "Fractura dentoalveolar férula aparte", umas: 6.02, nivel6: 6.02 * 113.14, categoria: "Traumatología" },
+  { clave: "037-03", descripcion: "Fractura mandibular estable", umas: 6.06, nivel6: 6.06 * 113.14, categoria: "Traumatología" },
+  { clave: "037-04", descripcion: "Fractura mandibular inestable y fer. (osteo.)", umas: 8.20, nivel6: 8.20 * 113.14, categoria: "Traumatología" },
+  { clave: "037-05", descripcion: "Fractura tercio medio cigomático malar", umas: 3.53, nivel6: 3.53 * 113.14, categoria: "Traumatología" },
+  { clave: "037-06", descripcion: "Suturas mayores (10 puntos)", umas: 4.16, nivel6: 4.16 * 113.14, categoria: "Traumatología" },
+
+		// Exodoncía
+            { clave: "038-01", descripcion: "Implante normal (por pieza)", umas: 2.53, nivel6: 2.53 * 113.14, categoria: "Exodoncia" },
+  { clave: "038-02", descripcion: "Implante anormal (por pieza)", umas: 3.83, nivel6: 3.83 * 113.14, categoria: "Exodoncia" },
+  { clave: "038-03", descripcion: "Órganos dentarios retenidos (por pieza)", umas: 5.43, nivel6: 5.43 * 113.14, categoria: "Exodoncia" },
+
+		// Ortdoncía
+            { clave: "039-01", descripcion: "Cuota por sesión ortodoncia", umas: 3.53, nivel6: 3.53 * 113.14, categoria: "Exodoncia" },
+
+		// Salud Mental
+           { clave: "040-01", descripcion: "Pruebas de personalidad", umas: 10.20, nivel6: 10.20 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-02", descripcion: "Pruebas vocacionales", umas: 0.00, nivel6: 0.00 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-03", descripcion: "Pruebas psicométricas (individual)", umas: 26.99, nivel6: 26.99 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-04", descripcion: "Paquete de pruebas psicom. (más de 5 p) c/u", umas: 11.46, nivel6: 11.46 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-05", descripcion: "Pruebas mmpi", umas: 6.25, nivel6: 6.25 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-06", descripcion: "Pruebas de WAIS", umas: 12.42, nivel6: 12.42 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-07", descripcion: "Pruebas de tat", umas: 12.39, nivel6: 12.39 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-08", descripcion: "Pruebas de buck", umas: 9.30, nivel6: 9.30 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-09", descripcion: "Pruebas de bender", umas: 3.18, nivel6: 3.18 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-10", descripcion: "Pruebas de hábitat", umas: 6.22, nivel6: 6.22 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-11", descripcion: "Pruebas de wipsi", umas: 7.79, nivel6: 7.79 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-12", descripcion: "Pruebas de wisc", umas: 12.43, nivel6: 12.43 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-13", descripcion: "Terapia conyugal (por pareja de 1 a 3 sesiones)", umas: 5.46, nivel6: 5.46 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-14", descripcion: "Terapia familiar (familia de 1 a 3 sesiones)", umas: 4.73, nivel6: 4.73 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-15", descripcion: "Terapia individual (de 1 a 3 sesiones)", umas: 5.46, nivel6: 5.46 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-16", descripcion: "Terapia de grupo de 1 a 3 sesiones por persona", umas: 5.46, nivel6: 5.46 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-17", descripcion: "Hospitalización psiquiátrica por día", umas: 13.09, nivel6: 13.09 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-19", descripcion: "Desintoxicación alcohólica", umas: 25.60, nivel6: 25.60 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-20", descripcion: "Prueba de Roscharch", umas: 3.20, nivel6: 3.20 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-21", descripcion: "Inscripción a grupos de orientación (anual)", umas: 6.18, nivel6: 6.18 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-22", descripcion: "Grupos de orientación (mensualidad)", umas: 4.82, nivel6: 4.82 * 113.14, categoria: "Salud Mental" },
+  { clave: "040-23", descripcion: "Paseos terapéuticos", umas: 6.18, nivel6: 6.18 * 113.14, categoria: "Salud Mental" },
+  
+		             // Dermatología
+            { clave: "050-01", descripcion: "Biopsia", umas: 5.55, nivel6: 5.55 * 113.14, categoria: "Dermatología" },
+  	{ clave: "050-02", descripcion: "Electrodesecaciön", umas: 6.81, nivel6: 6.81 * 113.14, categoria: "Dermatología" },
+  { clave: "050-03", descripcion: "Electrofulguración", umas: 6.81, nivel6: 6.81 * 113.14, categoria: "Dermatología" },
+  { clave: "050-04", descripcion: "Crioterapia", umas: 4.94, nivel6: 4.94 * 113.14, categoria: "Dermatología" },
+  { clave: "050-05", descripcion: "Extirpación de verrugas", umas: 6.26, nivel6: 6.26 * 113.14, categoria: "Dermatología" },
+  { clave: "050-06", descripcion: "Extirpación de lunares", umas: 7.59, nivel6: 7.59 * 113.14, categoria: "Dermatología" },
+  { clave: "050-07", descripcion: "Estudios micológicos", umas: 2.22, nivel6: 2.22 * 113.14, categoria: "Dermatología" },
+  { clave: "050-09", descripcion: "Criocirugía", umas: 6.14, nivel6: 6.14 * 113.14, categoria: "Dermatología" },
+  { clave: "050-10", descripcion: "Radioterapia superficial", umas: 6.14, nivel6: 6.14 * 113.14, categoria: "Dermatología" },
+  { clave: "050-12", descripcion: "Aplicación tópica", umas: 8.08, nivel6: 8.08 * 113.14, categoria: "Dermatología" },
+  { clave: "050-13", descripcion: "Aplicación intralesional", umas: 10.89, nivel6: 10.89 * 113.14, categoria: "Dermatología" },
+            
+           
+            // Neurología y neurocirugía
+{ clave: "090-01", descripcion: "Punción lumbar", umas: 9.54, nivel6: 9.54 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-02", descripcion: "Craneotomía", umas: 1074.12, nivel6: 1074.12 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-03", descripcion: "Creniectomía", umas: 56.09, nivel6: 56.09 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-04", descripcion: "Exploración de nervio periférico. plastias", umas: 34.90, nivel6: 34.90 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-05", descripcion: "Meningoplastia", umas: 44.87, nivel6: 44.87 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-06", descripcion: "Colocación de válvula pudens (con sonda)", umas: 110.09, nivel6: 110.09 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-09", descripcion: "Abordaje de columna cervical vía anterior", umas: 71.20, nivel6: 71.20 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-10", descripcion: "Cirugía transfenoidal", umas: 71.20, nivel6: 71.20 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-13", descripcion: "Electroencefalografía", umas: 18.93, nivel6: 18.93 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-14", descripcion: "Electromiografía", umas: 8.22, nivel6: 8.22 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-15", descripcion: "Potenciales evocados", umas: 7.12, nivel6: 7.12 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-17", descripcion: "Velocidad de conducción", umas: 5.36, nivel6: 5.36 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-18", descripcion: "Mapeo cerebral con potenciales o beg.", umas: 13.73, nivel6: 13.73 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-19", descripcion: "Resección meningional frontal", umas: 69.26, nivel6: 69.26 * 113.14, categoria: "Neurología y Neurocirugía" },
+  { clave: "090-20", descripcion: "Resección tercer ventrículo", umas: 346.55, nivel6: 346.55 * 113.14, categoria: "Neurología y Neurocirugía" },
+            
+
+            // Neumología
+   { clave: "100-01", descripcion: "Punción transtorácica", umas: 8.00, nivel6: 8.00 * 113.14, categoria: "Neumología" },
+  { clave: "100-02", descripcion: "Toracotomía", umas: 45.36, nivel6: 45.36 * 113.14, categoria: "Neumología" },
+  { clave: "100-03", descripcion: "Toracotomía con resección", umas: 51.64, nivel6: 51.64 * 113.14, categoria: "Neumología" },
+  { clave: "100-05", descripcion: "Toractomía de proceso mediastinal", umas: 54.76, nivel6: 54.76 * 113.14, categoria: "Neumología" },
+  { clave: "100-06", descripcion: "Decorticación pulmonar", umas: 60.17, nivel6: 60.17 * 113.14, categoria: "Neumología" },
+  { clave: "100-08", descripcion: "Mioplastia", umas: 73.85, nivel6: 73.85 * 113.14, categoria: "Neumología" },
+  { clave: "100-09", descripcion: "Toracoplastia", umas: 44.46, nivel6: 44.46 * 113.14, categoria: "Neumología" },
+  { clave: "100-10", descripcion: "Pleurotomía", umas: 29.70, nivel6: 29.70 * 113.14, categoria: "Neumología" },
+  { clave: "100-12", descripcion: "Mediastinotomía", umas: 34.71, nivel6: 34.71 * 113.14, categoria: "Neumología" },
+  { clave: "100-13", descripcion: "traqueostomia", umas: 21.70, nivel6: 21.70 * 113.14, categoria: "Neumología" },
+  { clave: "100-14", descripcion: "Broncoscopía con broncoscopio rígido diagnost.", umas: 6.93, nivel6: 6.93 * 113.14, categoria: "Neumología" },
+  { clave: "100-15", descripcion: "Broncoscopía con brocoscopio lavado terap.", umas: 6.93, nivel6: 6.93 * 113.14, categoria: "Neumología" },
+  { clave: "100-16", descripcion: "Fibrobroncoscopía cepillado lavado biopsia", umas: 82.54, nivel6: 82.54 * 113.14, categoria: "Neumología" },
+  { clave: "100-17", descripcion: "Fibrobroncoscopía biopsia transbronquial", umas: 82.54, nivel6: 82.54 * 113.14, categoria: "Neumología" },
+  { clave: "100-18", descripcion: "Fibrobroncoscopía lavado broncoalveolar", umas: 5.81, nivel6: 5.81 * 113.14, categoria: "Neumología" },
+  { clave: "100-19", descripcion: "Fibrobroncoscopía cepillado selectivo", umas: 6.77, nivel6: 6.77 * 113.14, categoria: "Neumología" },
+  { clave: "100-20", descripcion: "Fibrobroncoscopía biopsia punción transbron.", umas: 82.54, nivel6: 82.54 * 113.14, categoria: "Neumología" },
+  { clave: "100-21", descripcion: "Fibroncoscopía extracción de cuerpo extraño", umas: 9.73, nivel6: 9.73 * 113.14, categoria: "Neumología" },
+  { clave: "100-22", descripcion: "Toracoscopía toma de biopsia o muest. de liq.", umas: 82.54, nivel6: 82.54 * 113.14, categoria: "Neumología" },
+  { clave: "100-23", descripcion: "Laringoscopía directa e indirecta", umas: 6.75, nivel6: 6.75 * 113.14, categoria: "Neumología" },
+  
+            
+            // Cirugía plástica y reconstructiva
+           { clave: "110-02", descripcion: "Fasciotomía", umas: 34.20, nivel6: 34.20 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-03", descripcion: "Mamas de reducción", umas: 123.86, nivel6: 123.86 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-04", descripcion: "Mamas en aumento", umas: 178.84, nivel6: 178.84 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-05", descripcion: "Lipectomia abdominal", umas: 118.70, nivel6: 118.70 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-06", descripcion: "Blefaroplastía", umas: 208.70, nivel6: 208.70 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-08", descripcion: "Mentoplastía", umas: 146.91, nivel6: 146.91 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-09", descripcion: "Progmatismo", umas: 66.83, nivel6: 66.83 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-12", descripcion: "Colocación de expansores", umas: 61.76, nivel6: 61.76 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-13", descripcion: "Maxilofacial", umas: 77.68, nivel6: 77.68 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-14", descripcion: "Colgajos Miocutáneos", umas: 60.15, nivel6: 60.15 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-15", descripcion: "Colgajos", umas: 36.12, nivel6: 36.12 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-16", descripcion: "Microcirugía", umas: 63.59, nivel6: 63.59 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-17", descripcion: "Temorrafías", umas: 24.68, nivel6: 24.68 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-18", descripcion: "Neurorrafías", umas: 19.35, nivel6: 19.35 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-20", descripcion: "Labio leporino y paladar hendido", umas: 16.76, nivel6: 16.76 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-21", descripcion: "Mastopexia", umas: 117.60, nivel6: 117.60 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-22", descripcion: "Plastia umbilical", umas: 19.48, nivel6: 19.48 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-23", descripcion: "Injertos de piel menores", umas: 31.78, nivel6: 31.78 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-24", descripcion: "Injertos de piel mayores", umas: 61.18, nivel6: 61.18 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-25", descripcion: "Cicatrices de manos", umas: 14.85, nivel6: 14.85 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-26", descripcion: "Cicatrices mayores", umas: 22.66, nivel6: 22.66 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-27", descripcion: "Plastia local (cicatrices mayores)", umas: 22.66, nivel6: 22.66 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-28", descripcion: "Prótesis de mamas", umas: 178.84, nivel6: 178.84 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+  { clave: "110-29", descripcion: "Obturador l. p. h.", umas: 22.66, nivel6: 22.66 * 113.14, categoria: "Cirugía plástica y reconstructiva" },
+
+            // Cirugía Cardiovascular
+{ clave: "120-01", descripcion: "Aplicación marcapaso temporal", umas: 520.07, nivel6: 520.07 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-03", descripcion: "Coronariografía", umas: 16.91, nivel6: 16.91 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-04", descripcion: "Coronarioplastia", umas: 67.69, nivel6: 67.69 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-05", descripcion: "Trombolosis coronaria", umas: 67.69, nivel6: 67.69 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-06", descripcion: "Plastia de valv. pulm. aorticamitral", umas: 59.63, nivel6: 59.63 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-07", descripcion: "Estudio electrofisiológico (aas de. hu)", umas: 16.99, nivel6: 16.99 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-08", descripcion: "Apexcardiograma", umas: 9.03, nivel6: 9.03 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-09", descripcion: "Cateterismo cardiaco simple", umas: 2353.24, nivel6: 2353.24 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-10", descripcion: "Cateterismo cardiaco con angiografía", umas: 3623.20, nivel6: 3623.20 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-11", descripcion: "Angiografía de vasos periféricos", umas: 186.31, nivel6: 186.31 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-12", descripcion: "Ecocardiograma simple", umas: 19.62, nivel6: 19.62 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-13", descripcion: "Ecocardiograma con dopler", umas: 32.03, nivel6: 32.03 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-14", descripcion: "Electrocardiograma en reposo", umas: 3.92, nivel6: 3.92 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-15", descripcion: "Electrocardiograma de esfuerzo", umas: 6.55, nivel6: 6.55 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-16", descripcion: "Fonocardiograma", umas: 7.42, nivel6: 7.42 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-17", descripcion: "Corazón abierto", umas: 129.24, nivel6: 129.24 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-18", descripcion: "Corazón cerrado y grandes vasos", umas: 117.52, nivel6: 117.52 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-19", descripcion: "Aorta abdominal", umas: 61.10, nivel6: 61.10 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-20", descripcion: "Prueba de esfuerzo", umas: 6.20, nivel6: 6.20 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-21", descripcion: "Cirugía vascular de abdomen y tórax", umas: 86.86, nivel6: 86.86 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-22", descripcion: "Simpatectomía", umas: 41.06, nivel6: 41.06 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-23", descripcion: "Cirugía vascular periférica", umas: 41.06, nivel6: 41.06 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-24", descripcion: "Derivación atrioventricular", umas: 41.06, nivel6: 41.06 * 113.14, categoria: "Cirugía Cardiovascular" },
+  { clave: "120-25", descripcion: "Anillos vasculares", umas: 52.17, nivel6: 52.17 * 113.14, categoria: "Cirugía Cardiovascular" },
+
+            // Auxiliares de Tratamiento
+            { clave: "360-01", descripcion: "Lavado gástrico", umas: 5.89, nivel6: 5.89 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-02", descripcion: "Sondeo vesical", umas: 5.32, nivel6: 5.32 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-03", descripcion: "Venoclisis", umas: 5.85, nivel6: 5.85 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-04", descripcion: "Aplicación de inyecciones intravenosas", umas: 2.02, nivel6: 2.02 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-05", descripcion: "Aplicación de inyecciones intramusculares", umas: 1.24, nivel6: 1.24 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-06", descripcion: "Vendajes compresivos", umas: 3.43, nivel6: 3.43 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-07", descripcion: "Retiro de yeso", umas: 2.02, nivel6: 2.02 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-08", descripcion: "Sangría", umas: 7.59, nivel6: 7.59 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-09", descripcion: "Punción vesical suprapúbica", umas: 22.66, nivel6: 22.66 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-10", descripcion: "Radioterapia por sesión", umas: 13.93, nivel6: 13.93 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-11", descripcion: "Curaciones", umas: 2.86, nivel6: 2.86 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-12", descripcion: "Inhaloterapia por sesión", umas: 1.12, nivel6: 1.12 * 113.14, categoria: "Auxiliares de tratamiento" },
+  { clave: "360-13", descripcion: "Lavado de oídos", umas: 1.12, nivel6: 1.12 * 113.14, categoria: "Auxiliares de tratamiento" },
+            
+            // Otros Servicios
+            { clave: "370-10", descripcion: "Servicio de reposición de carnet", umas: 0.75, nivel6: 0.75 * 113.14, categoria: "Otros Servicios" },
+  { clave: "370-11", descripcion: "Certificado prenupcial (incluye v.d.r.l. y tórax)", umas: 4.63, nivel6: 4.63 * 113.14, categoria: "Otros Servicios" },
+  { clave: "370-12", descripcion: "Certificado médico (únicamente expedición)", umas: 0.49, nivel6: 0.49 * 113.14, categoria: "Otros Servicios" },
+  { clave: "370-29", descripcion: "Serv. de ambul. p/trasl. de enf. y cadav. (Local)", umas: 3.43, nivel6: 3.43 * 113.14, categoria: "Otros Servicios" }
+
+        ];
+
+                // Variables para servicios seleccionados
+        let selectedServices = [];
+        let currentLevel = 6;
+
+        // Cargar categorías en el filtro
+        function loadCategories() {
+            const categories = [...new Set(medicalServices.map(service => service.categoria))];
+            const filter = document.getElementById('categoryFilter');
+            
+            categories.sort().forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                filter.appendChild(option);
+            });
+        }
+        
+        // Filtrar servicios por categoría
+        function filterByCategory() {
+            const category = document.getElementById('categoryFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let results = medicalServices;
+            
+            if (category) {
+                results = results.filter(service => service.categoria === category);
+            }
+            
+            if (searchTerm) {
+                results = results.filter(service => 
+                    service.clave.includes(searchTerm) || 
+                    service.descripcion.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            displayServicesList(results);
+        }
+        
+        // Mostrar lista de servicios
+        function displayServicesList(services) {
+            const container = document.getElementById('servicesByCategory');
+            container.innerHTML = '';
+            
+            if (services.length === 0) {
+                container.innerHTML = '<p>No se encontraron servicios en esta categoría.</p>';
+                return;
+            }
+            
+            services.forEach(service => {
+                const price = calculatePrice(service, currentLevel);
+                const isSelected = selectedServices.some(s => s.clave === service.clave);
+                
+                const card = document.createElement('div');
+                card.className = `service-card ${isSelected ? 'selected' : ''}`;
+                card.innerHTML = `
+                    <h3>${service.descripcion}</h3>
+                    <div class="service-code">${service.clave}</div>
+                    <div><strong>Categoría:</strong> ${service.categoria}</div>
+                    <div class="price">Precio: $${price.toFixed(2)}</div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="check-${service.clave}" 
+                               ${isSelected ? 'checked' : ''}
+                               onchange="toggleServiceSelection('${service.clave}')">
+                        <label for="check-${service.clave}">Seleccionar</label>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            updateTotal();
+        }
+        
+        // Alternar selección de servicio
+        function toggleServiceSelection(clave) {
+            const service = medicalServices.find(s => s.clave === clave);
+            if (!service) return;
+            
+            const index = selectedServices.findIndex(s => s.clave === clave);
+            const checkbox = document.getElementById(`check-${clave}`);
+            
+            if (checkbox.checked && index === -1) {
+                selectedServices.push({
+                    ...service,
+                    selectedPrice: calculatePrice(service, currentLevel)
+                });
+            } else if (!checkbox.checked && index !== -1) {
+                selectedServices.splice(index, 1);
+            }
+            
+            // Actualizar estilos y total
+            const card = checkbox.closest('.service-card');
+            if (card) {
+                card.classList.toggle('selected', checkbox.checked);
+            }
+            
+            updateTotal();
+        }
+        
+        // Calcular precio según nivel
+        function calculatePrice(service, level) {
+            switch(level) {
+                case '1': return service.nivel6 * 0.15;
+                case '2': return service.nivel6 * 0.25;
+                case '3': return service.nivel6 * 0.35;
+                case '4': return service.nivel6 * 0.5;
+                case '5': return service.nivel6 * 0.75;
+                case '6': return service.nivel6;
+                case '7': return service.nivel6 * 1.5;
+                default: return service.nivel6;
+            }
+        }
+        
+        // Actualizar servicios seleccionados cuando cambia el nivel
+        function updateSelectedServices() {
+            currentLevel = document.getElementById('levelSelect').value;
+            
+            // Actualizar precios en los servicios seleccionados
+            selectedServices = selectedServices.map(service => {
+                return {
+                    ...service,
+                    selectedPrice: calculatePrice(service, currentLevel)
+                };
+            });
+            
+            // Volver a mostrar la lista para actualizar precios
+            const category = document.getElementById('categoryFilter').value;
+            filterByCategory();
+            
+            updateTotal();
+        }
+        
+        // Actualizar el total
+        function updateTotal() {
+            const total = selectedServices.reduce((sum, service) => sum + service.selectedPrice, 0);
+            document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
+        }
+        
+        // Buscar servicio (para vista detallada)
+        function searchService() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            
+            let results = medicalServices;
+            
+            if (category) {
+                results = results.filter(service => service.categoria === category);
+            }
+            
+            if (searchTerm) {
+                results = results.filter(service => 
+                    service.clave.includes(searchTerm) || 
+                    service.descripcion.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (results.length > 0) {
+                showService(results[0].clave);
+                document.getElementById('noResults').style.display = 'none';
+            } else {
+                document.getElementById('serviceResults').style.display = 'none';
+                document.getElementById('noResults').style.display = 'block';
+            }
+        }
+        
+        // Mostrar detalles del servicio (vista detallada)
+        function showService(clave) {
+            const service = medicalServices.find(s => s.clave === clave);
+            if (!service) return;
+            
+            document.getElementById('serviceName').textContent = service.descripcion;
+            document.getElementById('serviceCode').textContent = service.clave;
+            document.getElementById('serviceDescription').innerHTML = `
+                <p><strong>Categoría:</strong> ${service.categoria}</p>
+                <p><strong>UMAS:</strong> ${service.umas}</p>
+            `;
+            
+            // Calcular precios para todos los niveles
+            const prices = {
+                6: service.nivel6,
+                7: service.nivel6 * 1.5,
+                1: service.nivel6 * 0.15,
+                2: service.nivel6 * 0.25,
+                3: service.nivel6 * 0.35,
+                4: service.nivel6 * 0.5,
+                5: service.nivel6 * 0.75
+            };
+            
+            // Mostrar tabla de precios
+            const tableBody = document.getElementById('priceTableBody');
+            tableBody.innerHTML = '';
+            
+            for (const [level, price] of Object.entries(prices)) {
+                const row = document.createElement('tr');
+                const percentage = level == 6 ? "100%" : 
+                                 level == 7 ? "150%" : 
+                                 `${parseInt(level)*15}%`;
+                
+                row.innerHTML = `
+                    <td>${level}</td>
+                    <td>${percentage}</td>
+                    <td>$${price.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+            
+            // Actualizar precio seleccionado
+            updatePrices();
+            
+            document.getElementById('serviceResults').style.display = 'block';
+            document.getElementById('noResults').style.display = 'none';
+            
+            // Resaltar fila del nivel seleccionado
+            highlightSelectedLevel();
+        }
+        
+        // Actualizar precio en vista detallada
+        function updatePrices() {
+            const level = document.getElementById('levelSelectDetail').value;
+            const service = medicalServices.find(s => s.clave === document.getElementById('serviceCode').textContent);
+            if (!service) return;
+            
+            const price = calculatePrice(service, level);
+            document.getElementById('selectedPrice').textContent = `Precio: $${price.toFixed(2)}`;
+            
+            highlightSelectedLevel();
+        }
+        
+        // Resaltar fila del nivel seleccionado en vista detallada
+        function highlightSelectedLevel() {
+            const level = document.getElementById('levelSelectDetail').value;
+            const rows = document.querySelectorAll('#priceTableBody tr');
+            
+            rows.forEach(row => {
+                row.classList.remove('highlight');
+                if (row.cells[0].textContent === level) {
+                    row.classList.add('highlight');
+                }
+            });
+        }
+        
+        // Permitir búsqueda al presionar Enter
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchService();
+            }
+        });
+        
+        // Inicializar la aplicación
+        window.onload = function() {
+            loadCategories();
+        };
+    </script>
+</body>
+</html>
